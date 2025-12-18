@@ -1,0 +1,248 @@
+{% extends 'dashboard/base.html' %}
+
+{% block content %}
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show shadow-sm">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    {% endfor %}
+{% endif %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>لیست پروژه‌های {% if current_platform == 'telegram' %}تلگرام ✈️{% else %}یوتیوب 🎬{% endif %}</h2>
+    <button class="btn btn-success shadow-sm d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#projectModal">
+        <span style="font-size: 1.2em;">➕</span> شروع پروژه جدید
+    </button>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card bg-primary text-white p-3 text-center shadow-sm border-0">
+            <h3>{{ projects.count }}</h3>
+            <small>پروژه‌های این بخش</small>
+        </div>
+    </div>
+</div>
+
+<div class="card p-0 shadow-sm border-0 overflow-hidden">
+    <table class="table table-hover align-middle mb-0">
+        <thead class="table-light">
+            <tr>
+                <th style="width: 25%;">موضوع</th>
+                <th style="width: 15%;">وضعیت</th>
+                <th style="width: 20%;">مدیا</th>
+                <th style="width: 40%;">عملیات</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for project in projects %}
+            <tr>
+                <td>
+                    <strong>{{ project.topic }}</strong>
+                    <br>
+                    {% if project.project_type == 'image_based' %}
+                        <span class="badge bg-light text-dark border">📸 اسلایدی</span>
+                    {% elif project.project_type == 'product_post' %}
+                        <span class="badge bg-warning text-dark border">🛍️ پست محصول</span>
+                    {% else %}
+                        <span class="badge bg-light text-dark border">📝 متنی/ویدیو</span>
+                    {% endif %}
+                    
+                    <span class="badge bg-light text-secondary border">{{ project.get_narrator_style_display }}</span>
+                    <br>
+                    <small class="text-muted">{{ project.created_at|date:"Y/m/d" }}</small>
+                </td>
+                
+                <td>
+                    {% if project.status == 'uploaded' %}
+                        <span class="badge bg-success">✅ آپلود شده</span>
+                    {% elif project.status == 'video_ready' %}
+                        <span class="badge bg-info text-dark">مدیا آماده</span>
+                    {% elif project.status == 'script_ready' %}
+                        <span class="badge bg-warning text-dark">متن آماده</span>
+                    {% else %}
+                        <span class="badge bg-secondary">{{ project.get_status_display }}</span>
+                    {% endif %}
+                    
+                    {% if project.scheduled_creation or project.scheduled_upload %}
+                        <br>
+                        <span class="badge bg-danger text-white mt-1" style="font-size: 0.7em;">⏰ زمان‌بندی</span>
+                    {% endif %}
+                </td>
+
+                <td>
+                    {% if project.thumbnail_path %}
+                        <a href="/media/{{ project.thumbnail_path }}" target="_blank">
+                            <img src="/media/{{ project.thumbnail_path }}" style="width: 80px; height: 80px; object-fit: cover; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                        </a>
+                    {% elif project.images.first %}
+                        <img src="/media/{{ project.images.first.image }}" style="width: 80px; height: 80px; object-fit: cover; border-radius: 6px;">
+                    {% else %}
+                        <span class="text-muted small">---</span>
+                    {% endif %}
+                </td>
+
+                <td>
+                    {% if not project.video_path and not project.thumbnail_path %}
+                         <a href="{% url 'start_generation' project.id %}" class="btn btn-warning shadow-sm btn-sm">
+                            ▶️ ساخت هوشمند
+                        </a>
+                    {% else %}
+                         <div class="btn-group shadow-sm" role="group">
+                            {% if project.video_path %}
+                                <a href="/media/{{ project.video_path }}" class="btn btn-outline-secondary btn-sm" target="_blank" title="دانلود ویدیو">📥</a>
+                            {% endif %}
+                            
+                            {% if project.status != 'uploaded' %}
+                                {% if project.platform == 'youtube' %}
+                                    <a href="{% url 'upload_youtube' project.id %}" class="btn btn-outline-danger btn-sm ms-2">
+                                        <i class="bi bi-youtube"></i> یوتیوب
+                                    </a>
+                                {% elif project.platform == 'telegram' %}
+                                    <a href="{% url 'upload_telegram' project.id %}" class="btn btn-outline-primary btn-sm ms-2">
+                                        <i class="bi bi-telegram"></i> تلگرام
+                                    </a>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+
+                        {% if project.status == 'uploaded' %}
+                            {% if project.platform == 'telegram' %}
+                                <a href="https://t.me/YourChannelID" target="_blank" class="btn btn-outline-primary btn-sm ms-2">مشاهده کانال</a>
+                            {% else %}
+                                <a href="https://studio.youtube.com" target="_blank" class="btn btn-outline-danger btn-sm ms-2">مشاهده</a>
+                            {% endif %}
+                        {% endif %}
+                    {% endif %}
+                    
+                    <a href="{% url 'edit_project' project.id %}" class="btn btn-outline-primary btn-sm ms-1" title="ویرایش">✏️</a>
+                    <a href="{% url 'delete_project' project.id %}" class="btn btn-outline-danger btn-sm" title="حذف" onclick="return confirm('آیا مطمئن هستید؟');">🗑️</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="5" class="text-center p-5 text-muted">هنوز پروژه‌ای در این بخش ثبت نشده است.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="modal fade" id="projectModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered"> 
+        <div class="modal-content">
+            
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">ایجاد پروژه جدید ({% if current_platform == 'telegram' %}تلگرام{% else %}یوتیوب{% endif %})</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <form method="post" enctype="multipart/form-data" action="{% url 'dashboard_home' %}?platform={{ current_platform }}">
+                {% csrf_token %}
+                
+                <div class="modal-body">
+                    
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">موضوع / نام محصول:</label>
+                        {{ form.topic }}
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label small fw-bold">نوع پروژه:</label>
+                            {{ form.project_type }} 
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label small fw-bold">سبک محتوا:</label>
+                            {{ form.narrator_style }}
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label small fw-bold">مدت زمان:</label>
+                            {{ form.duration_type }}
+                        </div>
+                    </div>
+
+                    <div id="modal-store-section" class="card bg-light border mb-3 p-3" style="display: none;">
+                        <small class="text-primary fw-bold d-block mb-2 border-bottom pb-1">🛍️ تنظیمات فروشگاه (محصول)</small>
+                        <div class="row">
+                            <div class="col-md-6 mb-2">
+                                <label class="small text-muted">نام برند:</label>
+                                {{ form.brand_name }}
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <label class="small text-muted">شرایط ارسال:</label>
+                                {{ form.shipping_info }}
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <label class="small text-muted">قیمت اصلی (تومان):</label>
+                                {{ form.original_price }}
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <label class="small text-muted">درصد تخفیف:</label>
+                                {{ form.discount_percent }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 p-3 rounded border border-dashed text-center">
+                        <label class="form-label fw-bold text-dark d-block mb-2">
+                            📸 آپلود عکس/اسلاید (اختیاری)
+                        </label>
+                        <input type="file" name="images" multiple class="form-control" accept="image/*">
+                        <small class="text-muted d-block mt-1">برای پست محصول، یک عکس کافیست.</small>
+                    </div>
+                    
+                    <div class="row bg-light mx-1 py-2 rounded">
+                        <div class="col-md-6">
+                            <small class="fw-bold">⏰ زمان ساخت:</small>
+                            {{ form.scheduled_creation }}
+                        </div>
+                        <div class="col-md-6">
+                            <small class="fw-bold">🚀 زمان آپلود:</small>
+                            {{ form.scheduled_upload }}
+                        </div>
+                    </div>
+
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">انصراف</button>
+                    <button type="submit" class="btn btn-success px-5">ایجاد پروژه</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // پیدا کردن المان‌های داخل مودال
+        // نکته: چون ID ها در صفحه یکتا هستند و فرم Edit هم هست، باید مطمئن شویم ID فرم مودال درست است.
+        // جنگو معمولاً یک ID پیش‌فرض می‌دهد. برای اطمینان، از روی نام کلاس یا ساختار پیدا می‌کنیم.
+        
+        const modal = document.getElementById('projectModal');
+        const storeSection = document.getElementById('modal-store-section');
+        // پیدا کردن سلکت نوع پروژه داخل مودال
+        const projectTypeSelect = modal.querySelector('select[name="project_type"]');
+
+        function toggleModalStore() {
+            if (projectTypeSelect && projectTypeSelect.value === 'product_post') {
+                storeSection.style.display = 'block';
+            } else {
+                storeSection.style.display = 'none';
+            }
+        }
+
+        if (projectTypeSelect) {
+            projectTypeSelect.addEventListener('change', toggleModalStore);
+            // اجرا در لحظه باز شدن (برای حالت پیش‌فرض)
+            toggleModalStore();
+        }
+    });
+</script>
+
+{% endblock %}

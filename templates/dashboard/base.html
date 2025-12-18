@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>استودیو هوشمند</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.rtl.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+    
+    <style>
+        body { font-family: 'Vazirmatn', sans-serif; background-color: #f4f6f9; }
+        .sidebar { min-height: 100vh; background: #2c3e50; color: white; display: flex; flex-direction: column; }
+        .sidebar a { color: #bdc3c7; text-decoration: none; display: block; padding: 12px; margin: 5px 0; border-radius: 8px; transition: 0.2s; }
+        .sidebar a:hover { background: #34495e; color: white; padding-right: 20px; }
+        
+        /* استایل‌های اختصاصی برای دکمه‌های فعال */
+        .sidebar a.active-youtube { background: #dc3545; color: white; box-shadow: 0 4px 6px rgba(220, 53, 69, 0.4); }
+        .sidebar a.active-telegram { background: #0088cc; color: white; box-shadow: 0 4px 6px rgba(0, 136, 204, 0.4); }
+        .sidebar a.active-instagram { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); color: white; }
+        .sidebar a.active-twitter { background: #000000; color: white; border: 1px solid #333; }
+        .sidebar a.active-tiktok { background: #000000; border-left: 4px solid #25F4EE; border-right: 4px solid #FE2C55; color: white; }
+
+        .sidebar i { margin-left: 10px; font-size: 1.2em; vertical-align: middle; }
+        .content-area { padding: 30px; }
+    </style>
+</head>
+<body>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2 sidebar p-3 d-none d-md-block">
+            <h4 class="text-center mb-4 mt-2 fw-bold">🎬 استودیو من</h4>
+            <hr style="border-color: #7f8c8d;">
+            
+            <small class="text-muted d-white mb-2 px-2">پلتفرم‌ها</small>
+
+            <a href="/?platform=youtube" class="{% if request.GET.platform == 'youtube' or not request.GET.platform %}active-youtube{% endif %}">
+                <i class="bi bi-youtube"></i> یوتیوب
+            </a>
+
+            <a href="/?platform=telegram" class="{% if request.GET.platform == 'telegram' %}active-telegram{% endif %}">
+                <i class="bi bi-telegram"></i> تلگرام
+            </a>
+
+            <a href="/?platform=instagram" class="{% if request.GET.platform == 'instagram' %}active-instagram{% endif %}">
+                <i class="bi bi-instagram"></i> اینستاگرام
+            </a>
+
+            <a href="/?platform=twitter" class="{% if request.GET.platform == 'twitter' %}active-twitter{% endif %}">
+                <i class="bi bi-twitter-x"></i> توییتر (X)
+            </a>
+
+            <a href="/?platform=tiktok" class="{% if request.GET.platform == 'tiktok' %}active-tiktok{% endif %}">
+                <i class="bi bi-tiktok"></i> تیک‌تاک
+            </a>
+
+            <hr style="border-color: #7f8c8d;">
+            
+            <a href="#" data-bs-toggle="modal" data-bs-target="#projectModal">
+                <i class="bi bi-plus-square-fill"></i> پروژه جدید
+            </a>
+            
+            <a href="/admin" target="_blank">
+                <i class="bi bi-gear-fill"></i> تنظیمات سیستم
+            </a>
+            <a href="/admin/password_change/" target="_blank">
+                <i class="bi bi-gear-fill"></i> تنظیمات و رمز عبور
+            </a>
+
+            <a href="/admin/logout/" class="text-danger mt-3 border-top pt-3 border-secondary">
+                <i class="bi bi-box-arrow-right"></i> خروج از حساب
+            </a>
+            
+             
+            <div class="mt-auto text-center text-muted small pt-5 mb-3">
+                نسخه هوشمند 3.۰
+            </div>
+        </div>
+
+        <div class="col-md-10 content-area">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </div>
+    
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

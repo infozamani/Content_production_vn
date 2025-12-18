@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تست سیستم ساخت ویدیو</title>
+    <style>
+        body {
+            font-family: Tahoma, sans-serif;
+            direction: rtl;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 15px;
+        }
+        .form-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+        input:focus, select:focus, textarea:focus {
+            border-color: #667eea;
+            outline: none;
+        }
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            width: 100%;
+            margin: 10px 0;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .btn-test {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            background: #e8f4fd;
+            border-radius: 10px;
+            display: none;
+        }
+        .segment {
+            background: white;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .debug-info {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            font-family: monospace;
+            font-size: 14px;
+            white-space: pre-wrap;
+        }
+        .status {
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎬 سیستم هوشمند ساخت ویدیو با AI</h1>
+        
+        <!-- بخش دیباگ -->
+        <div class="form-section">
+            <h3>🔧 تست سیستم</h3>
+            <button class="btn btn-test" onclick="testSystem()">تست ارتباط با سرور</button>
+            <div id="debugResult" class="debug-info"></div>
+        </div>
+        
+        <!-- فرم اصلی -->
+        <div class="form-section">
+            <h3>📝 ایجاد ویدیو جدید</h3>
+            <div>
+                <label for="topic">موضوع ویدیو:</label>
+                <input type="text" id="topic" placeholder="مثال: فواید مدیتیشن روزانه" value="فواید مدیتیشن روزانه">
+            </div>
+            
+            <div>
+                <label for="duration">مدت زمان:</label>
+                <select id="duration">
+                    <option value="short">کوتاه (1-2 دقیقه)</option>
+                    <option value="medium">متوسط (3-5 دقیقه)</option>
+                    <option value="long">بلند (5-10 دقیقه)</option>
+                </select>
+            </div>
+            
+            <div>
+                <label for="style">سبک محتوا:</label>
+                <select id="style">
+                    <option value="story">داستانی</option>
+                    <option value="educational" selected>آموزشی</option>
+                    <option value="motivational">انگیزشی</option>
+                    <option value="documentary">مستند</option>
+                    <option value="math">ریاضی</option>
+                </select>
+            </div>
+            
+            <button class="btn" onclick="generateScript()">🎬 تولید اسکریپت</button>
+            <button class="btn" onclick="createProject()">🚀 ساخت پروژه کامل</button>
+        </div>
+        
+        <!-- نمایش بارگیری -->
+        <div id="loading" class="loading">
+            <div class="loading-spinner"></div>
+            <p id="loadingText">در حال پردازش...</p>
+        </div>
+        
+        <!-- نتایج -->
+        <div id="result" class="result">
+            <h3>📋 نتایج:</h3>
+            <div id="output"></div>
+            <div id="statusMessages"></div>
+        </div>
+        
+        <!-- لاگ عملیات -->
+        <div class="form-section">
+            <h3>📊 لاگ عملیات</h3>
+            <div id="log"></div>
+        </div>
+    </div>
+
+    <script>
+        let currentProjectId = null;
+        
+        function log(message, type = 'info') {
+            const logDiv = document.getElementById('log');
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = document.createElement('div');
+            logEntry.className = `status status-${type}`;
+            logEntry.innerHTML = `<strong>[${timestamp}]</strong> ${message}`;
+            logDiv.prepend(logEntry);
+        }
+        
+        function showLoading(message) {
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('loadingText').textContent = message;
+        }
+        
+        function hideLoading() {
+            document.getElementById('loading').style.display = 'none';
+        }
+        
+        function testSystem() {
+            showLoading('در حال تست سیستم...');
+            log('آغاز تست سیستم', 'info');
+            
+            fetch('/video-maker/debug/')
+                .then(response => response.json())
+                .then(data => {
+                    hideLoading();
+                    document.getElementById('debugResult').textContent = 
+                        JSON.stringify(data, null, 2);
+                    log('✅ تست سیستم با موفقیت انجام شد', 'success');
+                })
+                .catch(error => {
+                    hideLoading();
+                    log('❌ خطا در تست سیستم: ' + error, 'error');
+                });
+        }
+        
+        function generateScript() {
+            const topic = document.getElementById('topic').value;
+            const duration = document.getElementById('duration').value;
+            const style = document.getElementById('style').value;
+            
+            if (!topic) {
+                alert('لطفاً موضوع را وارد کنید');
+                return;
+            }
+            
+            showLoading('در حال تولید اسکریپت...');
+            log(`شروع تولید اسکریپت: ${topic}`, 'info');
+            
+            fetch('/video-maker/api/generate-script/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify({ topic, duration, style })
+            })
+            .then(response => response.json())
+            .then(data => {
+                hideLoading();
+                
+                if (data.success) {
+                    log('✅ اسکریپت با موفقیت تولید شد', 'success');
+                    showScriptResult(data.script);
+                } else {
+                    log(`❌ خطا: ${data.error || 'خطای ناشناخته'}`, 'error');
+                    showStatus(`❌ خطا: ${data.error}`, 'error');
+                }
+            })
+            .catch(error => {
+                hideLoading();
+                log('❌ خطا در ارتباط با سرور: ' + error, 'error');
+                showStatus('❌ خطا در ارتباط با سرور', 'error');
+            });
+        }
+        
+        function createProject() {
+            const topic = document.getElementById('topic').value;
+            const duration = document.getElementById('duration').value;
+            const style = document.getElementById('style').value;
+            
+            if (!topic) {
+                alert('لطفاً موضوع را وارد کنید');
+                return;
+            }
+            
+            showLoading('در حال ایجاد پروژه...');
+            log(`شروع ایجاد پروژه: ${topic}`, 'info');
+            
+            fetch('/video-maker/api/create-project/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify({ topic, duration, style })
+            })
+            .then(response => response.json())
+            .then(data => {
+                hideLoading();
+                
+                if (data.success) {
+                    currentProjectId = data.project_id;
+                    log(`✅ پروژه ایجاد شد. شناسه: ${data.project_id}`, 'success');
+                    showScriptResult(data.script);
+                    showStatus(`✅ پروژه با شناسه ${data.project_id} ایجاد شد`, 'success');
+                    
+                    // شروع فرآیند تولید محتوا
+                    startContentGeneration(data.script, data.project_id);
+                } else {
+                    log(`❌ خطا: ${data.error || 'خطای ناشناخته'}`, 'error');
+                    showStatus(`❌ خطا: ${data.error}`, 'error');
+                }
+            })
+            .catch(error => {
+                hideLoading();
+                log('❌ خطا در ارتباط با سرور: ' + error, 'error');
+                showStatus('❌ خطا در ارتباط با سرور', 'error');
+            });
+        }
+        
+        function startContentGeneration(script, projectId) {
+            log('شروع تولید محتوای پروژه...', 'info');
+            
+            // تولید فایل‌های صوتی
+            script.script_segments.forEach((segment, index) => {
+                setTimeout(() => {
+                    generateAudioForSegment(segment.narration, projectId, index);
+                }, index * 2000); // تأخیر ۲ ثانیه بین هر درخواست
+            });
+            
+            // تولید تصاویر
+            script.script_segments.forEach((segment, index) => {
+                setTimeout(() => {
+                    generateImageForSegment(segment.visual, projectId, index);
+                }, script.script_segments.length * 2000 + index * 2000);
+            });
+        }
+        
+        function generateAudioForSegment(text, projectId, index) {
+            log(`تولید صدا برای بخش ${index + 1}...`, 'info');
+            
+            fetch('/video-maker/api/generate-audio/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify({ 
+                    text: text,
+                    project_id: projectId 
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    log(`✅ صدا برای بخش ${index + 1} تولید شد`, 'success');
+                } else {
+                    log(`❌ خطا در تولید صدا برای بخش ${index + 1}: ${data.error}`, 'error');
+                }
+            });
+        }
+        
+        function generateImageForSegment(prompt, projectId, index) {
+            log(`تولید تصویر برای بخش ${index + 1}...`, 'info');
+            
+            // تأخیر تصادفی برای جلوگیری از Rate Limit
+            const delay = index * 5000 + Math.random() * 3000; // 5-8 ثانیه بین هر درخواست
+            
+            setTimeout(() => {
+                fetch('/video-maker/api/generate-image/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken')
+                    },
+                    body: JSON.stringify({ 
+                        prompt: prompt,
+                        project_id: projectId 
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        if (data.queue_position) {
+                            log(`✅ تصویر برای بخش ${index + 1} به صف اضافه شد (موقعیت: ${data.queue_position})`, 'success');
+                        } else {
+                            log(`✅ تصویر برای بخش ${index + 1} تولید شد`, 'success');
+                        }
+                    } else {
+                        log(`⚠️ خطا در تولید تصویر برای بخش ${index + 1}: ${data.error || data.tip || 'خطای ناشناخته'}`, 'error');
+                        
+                        // اگر Rate Limit بود، تأخیر بیشتری بده
+                        if (data.error && data.error.includes('محدودیت')) {
+                            log(`⏳ منتظر می‌مانیم برای بخش ${index + 1}...`, 'info');
+                            // دوباره تلاش بعد از 30 ثانیه
+                            setTimeout(() => generateImageForSegment(prompt, projectId, index), 30000);
+                        }
+                    }
+                })
+                .catch(error => {
+                    log(`❌ خطای شبکه برای بخش ${index + 1}: ${error}`, 'error');
+                });
+            }, delay);
+        }
+        function showScriptResult(script) {
+            const resultDiv = document.getElementById('result');
+            const outputDiv = document.getElementById('output');
+            
+            let html = `
+                <h4>🎬 ${script.title}</h4>
+                <p><strong>📝 توضیحات:</strong> ${script.description.substring(0, 200)}...</p>
+                <p><strong>🏷️ تگ‌ها:</strong> ${script.tags}</p>
+                <hr>
+                <h4>📋 بخش‌های اسکریپت (${script.script_segments.length} بخش):</h4>
+            `;
+            
+            script.script_segments.forEach((segment, index) => {
+                html += `
+                    <div class="segment">
+                        <strong>🎯 بخش ${segment.image_index + 1}:</strong>
+                        <p>${segment.narration}</p>
+                        <small>🖼️ تصویر: ${segment.visual}</small>
+                    </div>
+                `;
+            });
+            
+            outputDiv.innerHTML = html;
+            resultDiv.style.display = 'block';
+        }
+        
+        function showStatus(message, type) {
+            const statusDiv = document.getElementById('statusMessages');
+            const statusMsg = document.createElement('div');
+            statusMsg.className = `status status-${type}`;
+            statusMsg.textContent = message;
+            statusDiv.appendChild(statusMsg);
+            
+            // حذف پیام بعد از ۵ ثانیه
+            setTimeout(() => {
+                statusMsg.remove();
+            }, 5000);
+        }
+        
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        
+        // تست اولیه سیستم
+        window.onload = function() {
+            log('سیستم آماده است. برای شروع تست کنید.', 'info');
+        }
+    </script>
+</body>
+</html>

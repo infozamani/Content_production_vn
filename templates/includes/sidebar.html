@@ -1,0 +1,43 @@
+<div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 280px; min-height: 100vh;">
+    <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+        <span class="fs-4">🚀 داشبورد هوشمند</span>
+    </a>
+    <hr>
+    <ul class="nav nav-pills flex-column mb-auto">
+        
+        <li class="nav-item">
+            <a href="/?platform=youtube" class="nav-link text-white {% if request.GET.platform == 'youtube' or not request.GET.platform %}active bg-danger{% endif %}">
+                <i class="bi bi-youtube me-2"></i>
+                YouTube Projects
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a href="/?platform=telegram" class="nav-link text-white {% if request.GET.platform == 'telegram' %}active bg-primary{% endif %}">
+                <i class="bi bi-telegram me-2"></i>
+                Telegram Channel
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a href="/?platform=instagram" class="nav-link text-white {% if request.GET.platform == 'instagram' %}active bg-warning text-dark{% endif %}">
+                <i class="bi bi-instagram me-2"></i>
+                Instagram Reels
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a href="/?platform=twitter" class="nav-link text-white {% if request.GET.platform == 'twitter' %}active bg-secondary{% endif %}">
+                <i class="bi bi-twitter-x me-2"></i>
+                X (Twitter)
+            </a>
+        </li>
+    </ul>
+    <hr>
+    
+    <div class="d-grid gap-2">
+        <a href="{% url 'create_project' %}?platform={{ request.GET.platform|default:'youtube' }}" class="btn btn-success">
+            + پروژه جدید
+        </a>
+    </div>
+</div>

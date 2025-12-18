@@ -1,0 +1,126 @@
+{% extends 'dashboard/base.html' %}
+
+{% block content %}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-9">
+            
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-warning text-dark d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0 fw-bold">✏️ ویرایش و تنظیمات: {{ project.topic }}</h5>
+                    <span class="badge bg-dark">{{ project.get_platform_display }}</span>
+                </div>
+                
+                <div class="card-body p-4">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <h6 class="text-secondary border-bottom pb-2 mb-3">📌 اطلاعات کلی</h6>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">عنوان پروژه / نام محصول:</label>
+                            {{ form.topic }}
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <label class="form-label">نوع پست:</label>
+                                {{ form.project_type }}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">سبک محتوا:</label>
+                                {{ form.narrator_style }}
+                            </div>
+                        </div>
+
+                        <div id="store-section" class="card bg-light border mb-4" style="display: none;">
+                            <div class="card-body">
+                                <h6 class="text-primary fw-bold mb-3">🛍️ تنظیمات فروشگاه (مخصوص پست محصول)</h6>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label small">نام برند:</label>
+                                        {{ form.brand_name }}
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label small">شرایط ارسال:</label>
+                                        {{ form.shipping_info }}
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label small">قیمت اصلی (تومان):</label>
+                                        {{ form.original_price }}
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label small">درصد تخفیف:</label>
+                                        {{ form.discount_percent }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h6 class="text-secondary border-bottom pb-2 mb-3 mt-4">✍️ متن کپشن / سناریو (پیش‌نمایش)</h6>
+                        <div class="mb-4">
+                            <div class="alert alert-info py-2 small">
+                                <i class="bi bi-info-circle"></i> متنی که در کادر زیر است، دقیقاً همان چیزی است که در تلگرام یا یوتیوب منتشر می‌شود. می‌توانید آن را دستی اصلاح کنید.
+                            </div>
+                            {{ form.script_text }}
+                        </div>
+
+                        <div class="card border-info mb-4">
+                            <div class="card-header bg-info text-white py-1">
+                                <small>⏰ تنظیمات زمان‌بندی خودکار</small>
+                            </div>
+                            <div class="card-body bg-light">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label class="form-label small">زمان شروع ساخت:</label>
+                                        {{ form.scheduled_creation }}
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label small">زمان آپلود:</label>
+                                        {{ form.scheduled_upload }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <div class="d-flex justify-content-between mt-4">
+                            <a href="{% url 'dashboard_home' %}?platform={{ project.platform }}" class="btn btn-outline-secondary px-4">
+                                بازگشت به داشبورد
+                            </a>
+                            <button type="submit" class="btn btn-primary px-5 shadow-sm fw-bold">
+                                ذخیره تغییرات
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const typeSelect = document.getElementById('id_project_type');
+        const storeSection = document.getElementById('store-section');
+        
+        function toggleStore() {
+            // اگر نوع پروژه "پست محصول" بود یا پلتفرم "تلگرام" بود
+            if (typeSelect.value === 'product_post') {
+                storeSection.style.display = 'block';
+            } else {
+                storeSection.style.display = 'none';
+            }
+        }
+
+        // اجرا در لحظه لود شدن صفحه
+        toggleStore();
+
+        // اجرا وقتی کاربر تغییر می‌دهد
+        typeSelect.addEventListener('change', toggleStore);
+    });
+</script>
+
+{% endblock %}
