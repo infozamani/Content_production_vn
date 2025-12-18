@@ -1,0 +1,97 @@
+# Django
+*.log
+*.pot
+*.pyc
+__pycache__/
+db.sqlite3
+db.sqlite3-journal
+media/
+staticfiles/
+
+# محیط مجازی پایتون
+venv/
+env/
+.venv/
+ENV/
+env.bak/
+venv.bak/
+
+# فایل محیطی (Environment variables)
+.env
+.env.local
+.env.*.local
+.env.production
+.env.development
+.env.test
+.secrets/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# سیستم‌عامل
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+[Tt]humbs.db
+desktop.ini
+
+# PyCharm
+.idea/
+*.iws
+*.iml
+*.ipr
+
+# VS Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# فایل‌های امنیتی/کانفیگ
+settings/local.py
+config/local_settings.py
+secret_key.txt
+
+# لاگ‌ها
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# فایل‌های موقت
+*.tmp
+*.temp
+*.zip
+*.rar
+
+# فایل‌های جمع‌آوری شده استاتیک (در حالت توسعه)
+static/
+
+# فایل‌های آپلود شده توسط کاربر (در حالت توسعه)
+media/
+
+# فایل‌های مهاجرت (اختیاری - بعضی‌ها این رو ignore نمی‌کنن)
+# !*/migrations/
+# */migrations/*.py
+# !*/migrations/__init__.py
+
+# اگر از PostgreSQL استفاده می‌کنی
+*.pid
+*.socket
+
+# اگر از Celery استفاده می‌کنی
+celerybeat-schedule
+celerybeat.pid
+
+# اگر از Redis استفاده می‌کنی
+dump.rdb
+redis-data/
