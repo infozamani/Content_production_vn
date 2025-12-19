@@ -72,6 +72,8 @@ yarn-error.log*
 *.temp
 *.zip
 *.rar
+a.py
+token.json
 
 # فایل‌های جمع‌آوری شده استاتیک (در حالت توسعه)
 static/
